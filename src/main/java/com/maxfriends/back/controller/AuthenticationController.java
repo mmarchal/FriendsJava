@@ -6,6 +6,7 @@ import com.maxfriends.back.security.config.JwtTokenUtil;
 import com.maxfriends.back.security.model.ApiResponse;
 import com.maxfriends.back.security.model.AuthToken;
 import com.maxfriends.back.security.model.LoginUser;
+import com.maxfriends.back.utilities.LogsInformations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,11 +27,14 @@ public class AuthenticationController {
     @Autowired
     private FriendRepository friendRepository;
 
+    private LogsInformations logsInformations = new LogsInformations();
+
     @PostMapping()
     public ApiResponse<AuthToken> register(@RequestBody LoginUser user) throws AuthenticationException {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
         Friend friend = friendRepository.findByLogin(user.getUsername());
         String token = jwtTokenUtil.generateToken(friend.getLogin());
+        logsInformations.affichageLogDate("Utilisateur " + friend.getPrenom() + " connecté !");
         return new ApiResponse<>(200,"OK",new AuthToken(token,friend.getPrenom(),friend.getId()));
     }
 

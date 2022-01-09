@@ -8,6 +8,10 @@ import com.maxfriends.back.utilities.LogsInformations;
 import org.modelmapper.ValidationException;
 import org.modelmapper.spi.ErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,10 +22,11 @@ import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
-@Service
-public class FriendService {
+@Service(value = "friendService")
+public class FriendService implements UserDetailsService {
 
     private LogsInformations logsInformations = new LogsInformations();
 
@@ -167,5 +172,19 @@ public class FriendService {
 
 
         return mailEnvoye;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+        Friend friend = this.friendRepository.findByLogin(username);
+        if (friend == null) {
+            logsInformations.affichageLogDate("Username ou password incorrect");
+            throw new UsernameNotFoundException("Invalid username or password !");
+        }
+        return new User(friend.getLogin(), friend.getPassword(), this.getAuthority());
+    }
+
+    private List<SimpleGrantedAuthority> getAuthority() {
+        return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 }

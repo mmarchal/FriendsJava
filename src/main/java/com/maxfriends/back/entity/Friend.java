@@ -1,5 +1,6 @@
 package com.maxfriends.back.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,6 +41,10 @@ public class Friend implements Serializable {
 
     @Column
     LocalDateTime dateExpiration;
+
+    @ManyToOne
+    @JoinColumn(name="sortie_id")
+    private Sortie sortie;
 
 
 }

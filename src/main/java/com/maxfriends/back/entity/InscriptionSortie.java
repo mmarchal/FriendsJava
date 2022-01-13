@@ -5,14 +5,13 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.Collection;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "sortie")
-public class Sortie implements Serializable {
+@Table(name = "inscriptionSortie")
+public class InscriptionSortie implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -21,14 +20,9 @@ public class Sortie implements Serializable {
     @Column
     Long id;
 
-    @Column
-    LocalDateTime datePropose;
+    @ManyToMany
+    Collection<Sortie> sortie;
 
-    @Column
-    String intitule;
-
-    @Column
-    String lieu;
-
-
+    @ManyToMany
+    Collection<Friend> participant;
 }

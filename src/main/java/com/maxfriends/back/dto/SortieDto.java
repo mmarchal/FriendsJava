@@ -18,6 +18,4 @@ public class SortieDto {
     String intitule;
 
     String lieu;
-
-    private Set<Friend> friends;
 }

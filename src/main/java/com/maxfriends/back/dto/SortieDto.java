@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Set;
 
 @Getter
@@ -18,4 +19,6 @@ public class SortieDto {
     String intitule;
 
     String lieu;
+
+    private Set<Friend> friends;
 }

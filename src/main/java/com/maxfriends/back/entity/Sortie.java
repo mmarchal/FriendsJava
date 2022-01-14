@@ -6,6 +6,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -30,5 +32,13 @@ public class Sortie implements Serializable {
     @Column
     String lieu;
 
-
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "sortie_friends",
+            joinColumns = {
+                    @JoinColumn(name = "sortie_id", referencedColumnName = "id",
+                            nullable = false, updatable = false)},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "friend_id", referencedColumnName = "id",
+                            nullable = false, updatable = false)})
+    private Set<Friend> friends = new HashSet<>();
 }

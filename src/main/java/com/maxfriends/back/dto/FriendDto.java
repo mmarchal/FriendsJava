@@ -1,11 +1,14 @@
 package com.maxfriends.back.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.maxfriends.back.entity.Friend;
 import com.maxfriends.back.entity.Sortie;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -28,5 +31,5 @@ public class FriendDto {
     LocalDateTime dateExpiration;
 
     @JsonIgnore
-    private Sortie sortie;
+    private Set<Sortie> sorties;
 }

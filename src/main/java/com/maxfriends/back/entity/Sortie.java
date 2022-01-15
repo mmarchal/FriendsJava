@@ -33,7 +33,7 @@ public class Sortie implements Serializable {
     String lieu;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "sortie_friends",
+    @JoinTable(name = "participant",
             joinColumns = {
                     @JoinColumn(name = "sortie_id", referencedColumnName = "id",
                             nullable = false, updatable = false)},

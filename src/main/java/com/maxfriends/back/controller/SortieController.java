@@ -24,4 +24,14 @@ public class SortieController {
     public SortieDto getSortieById(@PathVariable String id) {
         return this.sortieService.loadById(id);
     }
+
+    @PostMapping
+    public boolean suggestOuting(@RequestBody SortieDto sortieDto){
+        return this.sortieService.suggestOuting(sortieDto);
+    }
+
+    @PutMapping("/{sortieId}/{friendId}")
+    public boolean addOneFriendToOuting(@PathVariable Long sortieId, @PathVariable Long friendId){
+        return this.sortieService.addOneFriendToOuting(sortieId, friendId);
+    }
 }

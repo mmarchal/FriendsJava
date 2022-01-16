@@ -11,6 +11,8 @@ import com.maxfriends.back.utilities.LogsInformations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -66,6 +68,20 @@ public class SortieService {
         } else {
             logsInformations.affichageLogDate("Sortie avec id " + idSortie + " non trouvé !");
             return false;
+        }
+    }
+
+    public SortieDto updateDateOfOuting(Long sortieId, LocalDateTime date) {
+        Optional<Sortie> sortie = sortieRepository.findById(sortieId);
+        if(sortie.isPresent()) {
+            Sortie sortieTrouve = sortie.get();
+            sortieTrouve.setDatePropose(date);
+            this.sortieRepository.save(sortieTrouve);
+            logsInformations.affichageLogDate("Sortie " + sortieTrouve.getIntitule() + " avec nouvelle date : " + sortieTrouve.getDatePropose().format(DateTimeFormatter.ISO_LOCAL_DATE)  + " !");
+            return sortieDtoGenericConverter.entityToDto(sortieTrouve, SortieDto.class);
+        } else {
+            logsInformations.affichageLogDate("Sortie avec id " + sortieId + " non trouvé !");
+            return null;
         }
     }
 }

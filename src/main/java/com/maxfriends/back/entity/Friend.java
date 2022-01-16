@@ -45,6 +45,7 @@ public class Friend implements Serializable {
     @Column
     LocalDateTime dateExpiration;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "friends", fetch = FetchType.LAZY)
     private Set<Sortie> sorties = new HashSet<>();
 

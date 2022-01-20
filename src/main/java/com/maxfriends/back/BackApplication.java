@@ -1,6 +1,10 @@
 package com.maxfriends.back;
 
+import com.maxfriends.back.entity.TypeSortie;
+import com.maxfriends.back.repository.TypeSortieRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -14,6 +18,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
 @EnableSwagger2
 public class BackApplication {
+
+	@Autowired
+	TypeSortieRepository typeSortieRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(BackApplication.class, args);
@@ -34,4 +41,19 @@ public class BackApplication {
 		return mapper;
 	}
 
+	@Bean
+	InitializingBean sendDatabase() {
+		TypeSortie typeCinema = new TypeSortie();
+		typeCinema.setType("Cinéma");
+		TypeSortie typeSport = new TypeSortie();
+		typeSport.setType("Sport");
+		TypeSortie typeActivite = new TypeSortie();
+		typeActivite.setType("Activité");
+		return () -> {
+			typeSortieRepository.save(typeCinema);
+			typeSortieRepository.save(typeSport);
+			typeSortieRepository.save(typeActivite);
+		};
+	}
 }
+

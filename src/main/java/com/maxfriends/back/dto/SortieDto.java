@@ -1,6 +1,7 @@
 package com.maxfriends.back.dto;
 
 import com.maxfriends.back.entity.Friend;
+import com.maxfriends.back.entity.TypeSortie;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,8 @@ public class SortieDto {
     String intitule;
 
     String lieu;
+
+    TypeSortie typeSortie;
 
     private Set<Friend> friends;
 }

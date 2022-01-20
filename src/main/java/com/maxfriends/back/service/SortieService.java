@@ -5,8 +5,10 @@ import com.maxfriends.back.dto.FriendDto;
 import com.maxfriends.back.dto.SortieDto;
 import com.maxfriends.back.entity.Friend;
 import com.maxfriends.back.entity.Sortie;
+import com.maxfriends.back.entity.TypeSortie;
 import com.maxfriends.back.repository.FriendRepository;
 import com.maxfriends.back.repository.SortieRepository;
+import com.maxfriends.back.repository.TypeSortieRepository;
 import com.maxfriends.back.utilities.LogsInformations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,9 @@ public class SortieService {
 
     @Autowired
     FriendRepository friendRepository;
+
+    @Autowired
+    TypeSortieRepository typeSortieRepository;
 
     @Autowired
     GenericConverter<Sortie, SortieDto> sortieDtoGenericConverter;
@@ -53,12 +58,14 @@ public class SortieService {
 
     }
 
-    public boolean addOneFriendToOuting(Long idSortie, Long idFriend) {
+    public boolean addOneFriendToOuting(Long idSortie, Long idFriend, Long idType) {
         Optional<Friend> friend = friendRepository.findById(idFriend);
         Optional<Sortie> sortie = sortieRepository.findById(idSortie);
+        Optional<TypeSortie> type = typeSortieRepository.findById(idType);
 
         if(friend.isPresent() && sortie.isPresent()) {
             sortie.get().getFriends().add(friend.get());
+            type.ifPresent(typeSortie -> sortie.get().setTypeSortie(typeSortie));
             this.sortieRepository.save(sortie.get());
             logsInformations.affichageLogDate(friend.get().getPrenom() + " inscrit à la sortie " + sortie.get().getIntitule());
             return true;

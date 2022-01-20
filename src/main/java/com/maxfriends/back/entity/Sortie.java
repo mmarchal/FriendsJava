@@ -32,6 +32,10 @@ public class Sortie implements Serializable {
     @Column
     String lieu;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "typesortie_id", referencedColumnName = "id")
+    TypeSortie typeSortie;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "participant",
             joinColumns = {

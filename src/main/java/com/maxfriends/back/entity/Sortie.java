@@ -32,7 +32,7 @@ public class Sortie implements Serializable {
     @Column
     String lieu;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "typesortie_id", referencedColumnName = "id")
     TypeSortie typeSortie;
 
@@ -45,4 +45,7 @@ public class Sortie implements Serializable {
                     @JoinColumn(name = "friend_id", referencedColumnName = "id",
                             nullable = false, updatable = false)})
     private Set<Friend> friends = new HashSet<>();
+
+    @Column
+    String proposePar;
 }

@@ -1,6 +1,7 @@
 package com.maxfriends.back.controller;
 
 import com.maxfriends.back.dto.FriendDto;
+import com.maxfriends.back.entity.Sortie;
 import com.maxfriends.back.service.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,5 +44,10 @@ public class FriendController {
     @PostMapping("/checkingTempPassword/{username}")
     public boolean checkingTemp(@PathVariable String username, @RequestBody String tempString) {
         return this.friendService.checkingTempPassword(username, tempString);
+    }
+
+    @GetMapping("/{id}/sorties")
+    public Collection<Sortie> getSortiesOfFriend(@PathVariable Long id) {
+        return this.friendService.getSortiesOfFriend(id);
     }
 }

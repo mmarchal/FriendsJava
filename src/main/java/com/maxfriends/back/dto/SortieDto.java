@@ -24,4 +24,6 @@ public class SortieDto {
     TypeSortie typeSortie;
 
     private Set<Friend> friends;
+
+    String proposePar;
 }

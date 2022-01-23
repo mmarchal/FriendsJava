@@ -33,8 +33,8 @@ public class SortieController {
     }
 
     @PutMapping("/{sortieId}/{friendId}")
-    public boolean addOneFriendToOuting(@PathVariable Long sortieId, @PathVariable Long friendId, @PathVariable Long typeId){
-        return this.sortieService.addOneFriendToOuting(sortieId, friendId, typeId);
+    public boolean addOneFriendToOuting(@PathVariable Long sortieId, @PathVariable Long friendId){
+        return this.sortieService.addOneFriendToOuting(sortieId, friendId);
     }
 
     @PutMapping("/{sortieId}/date")

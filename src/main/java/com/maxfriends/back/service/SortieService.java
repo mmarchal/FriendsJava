@@ -58,14 +58,12 @@ public class SortieService {
 
     }
 
-    public boolean addOneFriendToOuting(Long idSortie, Long idFriend, Long idType) {
+    public boolean addOneFriendToOuting(Long idSortie, Long idFriend) {
         Optional<Friend> friend = friendRepository.findById(idFriend);
         Optional<Sortie> sortie = sortieRepository.findById(idSortie);
-        Optional<TypeSortie> type = typeSortieRepository.findById(idType);
 
         if(friend.isPresent() && sortie.isPresent()) {
             sortie.get().getFriends().add(friend.get());
-            type.ifPresent(typeSortie -> sortie.get().setTypeSortie(typeSortie));
             this.sortieRepository.save(sortie.get());
             logsInformations.affichageLogDate(friend.get().getPrenom() + " inscrit à la sortie " + sortie.get().getIntitule());
             return true;

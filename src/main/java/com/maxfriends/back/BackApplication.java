@@ -40,20 +40,5 @@ public class BackApplication {
 		ModelMapper mapper = new ModelMapper();
 		return mapper;
 	}
-
-	@Bean
-	InitializingBean sendDatabase() {
-		TypeSortie typeCinema = new TypeSortie();
-		typeCinema.setType("Cinéma");
-		TypeSortie typeSport = new TypeSortie();
-		typeSport.setType("Sport");
-		TypeSortie typeActivite = new TypeSortie();
-		typeActivite.setType("Activité");
-		return () -> {
-			typeSortieRepository.save(typeCinema);
-			typeSortieRepository.save(typeSport);
-			typeSortieRepository.save(typeActivite);
-		};
-	}
 }
 

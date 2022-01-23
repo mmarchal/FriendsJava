@@ -3,6 +3,7 @@ package com.maxfriends.back.service;
 import com.maxfriends.back.converter.GenericConverter;
 import com.maxfriends.back.dto.FriendDto;
 import com.maxfriends.back.entity.Friend;
+import com.maxfriends.back.entity.Sortie;
 import com.maxfriends.back.repository.FriendRepository;
 import com.maxfriends.back.utilities.LogsInformations;
 import org.modelmapper.ValidationException;
@@ -20,10 +21,7 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 @Service(value = "friendService")
 public class FriendService implements UserDetailsService {
@@ -186,5 +184,17 @@ public class FriendService implements UserDetailsService {
 
     private List<SimpleGrantedAuthority> getAuthority() {
         return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+    }
+
+    public Collection<Sortie> getSortiesOfFriend(Long id) {
+        Optional<Friend> friend = this.friendRepository.findById(id);
+        Collection<Sortie> listeSorties = new ArrayList<>(Collections.emptyList());
+        if(friend.isPresent()) {
+            logsInformations.affichageLogDate("Ami " + friend.get().getPrenom() + " trouvé !");
+            listeSorties.addAll(friend.get().getSorties());
+        } else {
+            logsInformations.affichageLogDate("Ami avec id n°" + id + " non trouvé !");
+        }
+        return listeSorties;
     }
 }

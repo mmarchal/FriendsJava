@@ -5,6 +5,8 @@ import com.maxfriends.back.entity.Sortie;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class TypeSortieDto {
@@ -14,5 +16,5 @@ public class TypeSortieDto {
     String type;
 
     @JsonIgnore
-    Sortie sortie;
+    private List<Sortie> sorties;
 }

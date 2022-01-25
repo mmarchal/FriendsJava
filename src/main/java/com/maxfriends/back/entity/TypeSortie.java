@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,6 +26,6 @@ public class TypeSortie implements Serializable {
     String type;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "typeSortie")
-    Sortie sortie;
+    @OneToMany
+    private List<Sortie> sorties;
 }

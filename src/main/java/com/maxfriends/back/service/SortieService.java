@@ -48,7 +48,9 @@ public class SortieService {
     public boolean suggestOuting(SortieDto sortieDto) {
 
         try {
-            this.sortieRepository.save(sortieDtoGenericConverter.dtoToEntity(sortieDto, Sortie.class));
+            Sortie sortie = sortieDtoGenericConverter.dtoToEntity(sortieDto, Sortie.class);
+            sortie.setTypeSortie(typeSortieRepository.getOne(sortieDto.getTypeSortie().getId()));
+            this.sortieRepository.save(sortie);
             logsInformations.affichageLogDate("Création de la sortie : " + sortieDto.getIntitule());
             return true;
         } catch (Exception e) {

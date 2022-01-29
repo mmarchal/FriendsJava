@@ -32,12 +32,12 @@ public class FriendController {
     }
 
     @PutMapping("/resetPassword")
-    public boolean resetPasswordId(@RequestBody FriendDto dto) {
+    public boolean resetPassword(@RequestBody FriendDto dto) {
         return this.friendService.resetPassword(dto);
     }
 
     @PostMapping("/getTempPassword")
-    public boolean getPassword(@RequestBody String username) {
+    public boolean getForgotPassword(@RequestBody String username) {
         return this.friendService.getForgotPassword(username);
     }
 

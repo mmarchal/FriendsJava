@@ -150,6 +150,7 @@ public class FriendService implements UserDetailsService {
                     String codeProvisoireClient = logsInformations.getRandomPassword(20);
                     friend.setCodeMdp(codeProvisoireClient);
                     friend.setMdpProvisoire(true);
+                    friend.setDateExpiration(LocalDateTime.now().plusMinutes(10));
                     this.friendRepository.save(friend);
                     MimeMessage message = new MimeMessage(session);
                     message.setFrom(new InternetAddress(from));

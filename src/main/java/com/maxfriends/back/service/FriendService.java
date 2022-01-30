@@ -2,6 +2,7 @@ package com.maxfriends.back.service;
 
 import com.maxfriends.back.converter.GenericConverter;
 import com.maxfriends.back.dto.FriendDto;
+import com.maxfriends.back.dto.PasswordDto;
 import com.maxfriends.back.entity.Friend;
 import com.maxfriends.back.entity.Sortie;
 import com.maxfriends.back.repository.FriendRepository;
@@ -63,25 +64,30 @@ public class FriendService implements UserDetailsService {
         }
     }
 
-    public boolean resetPassword(FriendDto dto) {
-        Friend friend = this.friendRepository.findByLogin(dto.getLogin());
+    public boolean resetPassword(PasswordDto dto) {
+        Friend friend = this.friendRepository.getOne(dto.getUserId());
         boolean retourFonction = false;
         if (friend == null) {
             logsInformations.affichageLogDate("Username ou password incorrect");
             throw new UsernameNotFoundException("Invalid username or password !");
         } else {
             BCryptPasswordEncoder encoderNew = new BCryptPasswordEncoder();
-            friend.setPassword(encoderNew.encode(dto.getPassword()));
-            friend.setMdpProvisoire(false);
-            friend.setCodeMdp("");
-            friend.setDateExpiration(null);
-            try {
-                this.friendRepository.save(friend);
-                retourFonction = true;
-                logsInformations.affichageLogDate("Mot de passe pour " + friend.getLogin() + " modifié avec succès !");
-            } catch (Exception e) {
-                retourFonction = false;
-                logsInformations.affichageLogDate("PB avec la modification du mot de passe : " + e.getMessage());
+            if(dto.getToken().equals(friend.getCodeMdp())) {
+                friend.setPassword(encoderNew.encode(dto.getNewPassword()));
+                friend.setMdpProvisoire(false);
+                friend.setCodeMdp("");
+                friend.setDateExpiration(null);
+                try {
+                    this.friendRepository.save(friend);
+                    retourFonction = true;
+                    logsInformations.affichageLogDate("Mot de passe pour " + friend.getLogin() + " modifié avec succès !");
+                } catch (Exception e) {
+                    retourFonction = false;
+                    logsInformations.affichageLogDate("PB avec la modification du mot de passe : " + e.getMessage());
+                }
+            } else {
+                logsInformations.affichageLogDate("Token incorrect !");
+                throw new UsernameNotFoundException("Token incorrect !");
             }
         }
         return retourFonction;

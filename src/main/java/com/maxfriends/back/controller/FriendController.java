@@ -1,6 +1,7 @@
 package com.maxfriends.back.controller;
 
 import com.maxfriends.back.dto.FriendDto;
+import com.maxfriends.back.dto.PasswordDto;
 import com.maxfriends.back.entity.Sortie;
 import com.maxfriends.back.service.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class FriendController {
     }
 
     @PutMapping("/resetPassword")
-    public boolean resetPassword(@RequestBody FriendDto dto) {
+    public boolean resetPassword(@RequestBody PasswordDto dto) {
         return this.friendService.resetPassword(dto);
     }
 

@@ -65,7 +65,7 @@ public class FriendService implements UserDetailsService {
     }
 
     public boolean resetPassword(PasswordDto dto) {
-        Friend friend = this.friendRepository.getOne(dto.getUserId());
+        Friend friend = this.friendRepository.findByLogin(dto.getUserLogin());
         boolean retourFonction = false;
         if (friend == null) {
             logsInformations.affichageLogDate("Username ou password incorrect");

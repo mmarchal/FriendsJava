@@ -29,7 +29,7 @@ public class PropositionController {
         return this.propositionService.addProposition(propositionDto);
     }
 
-    @GetMapping(name = "/types")
+    @GetMapping("/types")
     public Collection<TypeProposition> getTypesPropositions(){
         return this.propositionService.getAllTypes();
     }

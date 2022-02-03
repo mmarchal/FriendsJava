@@ -1,0 +1,36 @@
+package com.maxfriends.back.entity;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@Setter
+@Table(name = "proposition_evaluation")
+public class Proposition  implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    Long id;
+
+    @Column
+    String nom;
+
+    @Column
+    TypeProposition typeProposition;
+
+    @Column
+    LocalDateTime dateProposition;
+
+    @Column
+    String demande;
+
+
+}

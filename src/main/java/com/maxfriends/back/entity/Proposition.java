@@ -23,7 +23,8 @@ public class Proposition  implements Serializable {
     @Column
     String nom;
 
-    @Column
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "typeProposition_id", referencedColumnName = "id")
     TypeProposition typeProposition;
 
     @Column

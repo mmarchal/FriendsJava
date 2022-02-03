@@ -3,6 +3,7 @@ package com.maxfriends.back.controller;
 
 import com.maxfriends.back.dto.FriendDto;
 import com.maxfriends.back.dto.PropositionDto;
+import com.maxfriends.back.entity.TypeProposition;
 import com.maxfriends.back.service.PropositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,5 +27,10 @@ public class PropositionController {
     @PostMapping
     public boolean addProposition(@RequestBody PropositionDto propositionDto){
         return this.propositionService.addProposition(propositionDto);
+    }
+
+    @GetMapping(name = "/types")
+    public Collection<TypeProposition> getTypesPropositions(){
+        return this.propositionService.getAllTypes();
     }
 }

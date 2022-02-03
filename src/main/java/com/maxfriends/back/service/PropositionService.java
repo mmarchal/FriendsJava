@@ -4,6 +4,7 @@ package com.maxfriends.back.service;
 import com.maxfriends.back.converter.GenericConverter;
 import com.maxfriends.back.dto.PropositionDto;
 import com.maxfriends.back.entity.Proposition;
+import com.maxfriends.back.entity.TypeProposition;
 import com.maxfriends.back.repository.PropositionRepository;
 import com.maxfriends.back.repository.TypePropositionRepository;
 import com.maxfriends.back.utilities.LogsInformations;
@@ -49,5 +50,10 @@ public class PropositionService {
             logsInformations.affichageLogDate("Erreur lors de la création de la proposition " + propositionDto.getDemande() + " : " + e.getMessage());
             return false;
         }
+    }
+
+    public Collection<TypeProposition> getAllTypes() {
+        logsInformations.affichageLogDate("Récupération de la liste des types de propositions");
+        return typePropositionRepository.findAll();
     }
 }

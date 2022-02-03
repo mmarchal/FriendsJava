@@ -30,10 +30,6 @@ public class PropositionService {
     private
     GenericConverter<Proposition, PropositionDto> propositionDtoGenericConverter;
 
-    public PropositionService(PropositionRepository propositionRepository) {
-        this.propositionRepository = propositionRepository;
-    }
-
     public Collection<PropositionDto> getAll() {
         logsInformations.affichageLogDate("Récupération de la liste des propositions");
         return propositionDtoGenericConverter.entitiesToDtos(propositionRepository.findAll(), PropositionDto.class);

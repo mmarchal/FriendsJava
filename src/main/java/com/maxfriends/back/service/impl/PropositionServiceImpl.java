@@ -7,7 +7,7 @@ import com.maxfriends.back.entity.Proposition;
 import com.maxfriends.back.entity.TypeProposition;
 import com.maxfriends.back.repository.PropositionRepository;
 import com.maxfriends.back.repository.TypePropositionRepository;
-import com.maxfriends.back.service.PropositionService;
+import com.maxfriends.back.service.IPropositionService;
 import com.maxfriends.back.utilities.LogsInformations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 @Service
-public class PropositionServiceImpl implements PropositionService {
+public class PropositionServiceImpl implements IPropositionService {
 
     private LogsInformations logsInformations = new LogsInformations();
 

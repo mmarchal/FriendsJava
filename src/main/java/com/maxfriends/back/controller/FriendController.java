@@ -3,7 +3,7 @@ package com.maxfriends.back.controller;
 import com.maxfriends.back.dto.FriendDto;
 import com.maxfriends.back.dto.PasswordDto;
 import com.maxfriends.back.entity.Sortie;
-import com.maxfriends.back.service.impl.FriendServiceImpl;
+import com.maxfriends.back.service.IFriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +15,7 @@ import java.util.Collection;
 public class FriendController {
 
     @Autowired
-    FriendServiceImpl friendService;
+    IFriendService friendService;
 
     @GetMapping
     public Collection<FriendDto> getUsers(){

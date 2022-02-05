@@ -6,7 +6,7 @@ import com.maxfriends.back.entity.Sortie;
 
 import java.util.Collection;
 
-public interface FriendService {
+public interface IFriendService {
 
     Collection<FriendDto> getAll();
 
@@ -19,4 +19,6 @@ public interface FriendService {
     boolean getForgotPassword(String u);
 
     Collection<Sortie> getSortiesOfFriend(Long id);
+
+    boolean createFriend(FriendDto friendDto);
 }

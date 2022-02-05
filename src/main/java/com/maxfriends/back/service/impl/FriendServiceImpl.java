@@ -6,10 +6,8 @@ import com.maxfriends.back.dto.PasswordDto;
 import com.maxfriends.back.entity.Friend;
 import com.maxfriends.back.entity.Sortie;
 import com.maxfriends.back.repository.FriendRepository;
-import com.maxfriends.back.service.FriendService;
+import com.maxfriends.back.service.IFriendService;
 import com.maxfriends.back.utilities.LogsInformations;
-import org.modelmapper.ValidationException;
-import org.modelmapper.spi.ErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -26,7 +24,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service(value = "friendService")
-public class FriendServiceImpl implements UserDetailsService, FriendService {
+public class FriendServiceImpl implements UserDetailsService, IFriendService {
 
     private LogsInformations logsInformations = new LogsInformations();
 

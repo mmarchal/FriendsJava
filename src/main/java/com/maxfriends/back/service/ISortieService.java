@@ -5,7 +5,7 @@ import com.maxfriends.back.dto.SortieDto;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-public interface SortieService {
+public interface ISortieService {
 
     Collection<SortieDto> getAll();
 

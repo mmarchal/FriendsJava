@@ -1,9 +1,7 @@
 package com.maxfriends.back;
 
-import com.maxfriends.back.entity.TypeSortie;
 import com.maxfriends.back.repository.TypeSortieRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,8 +1,7 @@
 package com.maxfriends.back.controller;
 
 import com.maxfriends.back.dto.SortieDto;
-import com.maxfriends.back.entity.Sortie;
-import com.maxfriends.back.service.SortieService;
+import com.maxfriends.back.service.impl.SortieServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +14,7 @@ import java.util.Collection;
 public class SortieController {
 
     @Autowired
-    SortieService sortieService;
+    SortieServiceImpl sortieService;
 
     @GetMapping
     public Collection<SortieDto> getAllSorties(){

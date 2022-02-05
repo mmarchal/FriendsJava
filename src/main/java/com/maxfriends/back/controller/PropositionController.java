@@ -1,10 +1,9 @@
 package com.maxfriends.back.controller;
 
 
-import com.maxfriends.back.dto.FriendDto;
 import com.maxfriends.back.dto.PropositionDto;
 import com.maxfriends.back.entity.TypeProposition;
-import com.maxfriends.back.service.PropositionService;
+import com.maxfriends.back.service.impl.PropositionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,7 @@ import java.util.Collection;
 public class PropositionController {
 
     @Autowired
-    PropositionService propositionService;
+    PropositionServiceImpl propositionService;
 
 
     @GetMapping

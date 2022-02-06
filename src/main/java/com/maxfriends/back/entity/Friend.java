@@ -46,6 +46,12 @@ public class Friend implements Serializable {
     @Column
     LocalDateTime dateExpiration;
 
+    @ManyToMany(mappedBy = "friends")
+    private Collection<Channel> channels;
+
+    @OneToMany(mappedBy = "friend")
+    private Collection<Message> message;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "friends", fetch = FetchType.LAZY)
     private Set<Sortie> sorties = new HashSet<>();

@@ -64,21 +64,26 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
     }
 
     @Override
-    public boolean updateUser(FriendDto friendDto) {
-        Optional<Friend> optionalFriend = this.friendRepository.findById(friendDto.getId());
-        if(optionalFriend.isPresent()) {
-            Friend friend = optionalFriend.get();
-            logsInformations.affichageLogDate("Ami avec id " + friendDto.getId() + " trouvé ==> " + friend.getPrenom()  + " !");
-            friend.setLogin(friendDto.getLogin());
-            friend.setPrenom(friendDto.getPrenom());
-            friend.setEmail(friendDto.getEmail());
-            this.friendRepository.save(friend);
-            logsInformations.affichageLogDate("Données de l'utilisateur " + friend.getPrenom() + " modifié avec succès !");
-            return true;
-        } else {
-            logsInformations.affichageLogDate("Ami avec id " + friendDto.getId() + " non trouvé !");
-            return false;
+    public Friend updateUser(FriendDto friendDto) {
+        Friend friendUpdated = null;
+        try {
+            Optional<Friend> optionalFriend = this.friendRepository.findById(friendDto.getId());
+            if(optionalFriend.isPresent()) {
+                Friend friend = optionalFriend.get();
+                logsInformations.affichageLogDate("Ami avec id " + friendDto.getId() + " trouvé ==> " + friend.getPrenom()  + " !");
+                friend.setLogin(friendDto.getLogin());
+                friend.setPrenom(friendDto.getPrenom());
+                friend.setEmail(friendDto.getEmail());
+                this.friendRepository.save(friend);
+                logsInformations.affichageLogDate("Données de l'utilisateur " + friend.getPrenom() + " modifié avec succès !");
+                friendUpdated = friend;
+            } else {
+                logsInformations.affichageLogDate("Ami avec id " + friendDto.getId() + " non trouvé !");
+            }
+        } catch (Exception e) {
+            logsInformations.affichageLogDate("Erreur rencontré : " + e.getMessage());
         }
+        return friendUpdated;
     }
 
     public boolean resetPassword(PasswordDto dto) {

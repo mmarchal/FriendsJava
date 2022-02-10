@@ -23,5 +23,5 @@ public interface IFriendService {
 
     boolean createFriend(FriendDto friendDto);
 
-    boolean updateUser(FriendDto friendDto);
+    Friend updateUser(FriendDto friendDto);
 }

@@ -46,9 +46,11 @@ public class Friend implements Serializable {
     @Column
     LocalDateTime dateExpiration;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "friends")
     private Collection<Channel> channels;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "friend")
     private Collection<Message> message;
 

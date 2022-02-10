@@ -32,6 +32,11 @@ public class FriendController {
         return this.friendService.createFriend(friendDto);
     }
 
+    @PutMapping
+    public boolean updateUser(@RequestBody FriendDto friendDto) {
+        return this.friendService.updateUser(friendDto);
+    }
+
     @PutMapping("/resetPassword")
     public boolean resetPassword(@RequestBody PasswordDto dto) {
         return this.friendService.resetPassword(dto);

@@ -2,6 +2,7 @@ package com.maxfriends.back.service;
 
 import com.maxfriends.back.dto.FriendDto;
 import com.maxfriends.back.dto.PasswordDto;
+import com.maxfriends.back.entity.Friend;
 import com.maxfriends.back.entity.Sortie;
 
 import java.util.Collection;
@@ -21,4 +22,6 @@ public interface IFriendService {
     Collection<Sortie> getSortiesOfFriend(Long id);
 
     boolean createFriend(FriendDto friendDto);
+
+    boolean updateUser(FriendDto friendDto);
 }

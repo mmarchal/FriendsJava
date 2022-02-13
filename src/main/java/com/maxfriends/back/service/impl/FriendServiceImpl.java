@@ -69,7 +69,7 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
     public boolean uploadImgaeToDB(MultipartFile imageFile, Long friendId) {
         boolean retourUpload = false;
         Optional<Friend> optionalFriend = friendRepository.findById(friendId);
-        if(optionalFriend.isPresent()) {
+        if (optionalFriend.isPresent()) {
             Friend f = optionalFriend.get();
             logsInformations.affichageLogDate("Ami " + f.getPrenom() + " trouvé !");
             try {
@@ -88,6 +88,28 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
         }
 
         return retourUpload;
+    }
+
+    public Friend updateUser(FriendDto friendDto) {
+        Friend friendUpdated = null;
+        try {
+            Optional<Friend> optionalFriend = this.friendRepository.findById(friendDto.getId());
+            if(optionalFriend.isPresent()) {
+                Friend friend = optionalFriend.get();
+                logsInformations.affichageLogDate("Ami avec id " + friendDto.getId() + " trouvé ==> " + friend.getPrenom()  + " !");
+                friend.setLogin(friendDto.getLogin());
+                friend.setPrenom(friendDto.getPrenom());
+                friend.setEmail(friendDto.getEmail());
+                this.friendRepository.save(friend);
+                logsInformations.affichageLogDate("Données de l'utilisateur " + friend.getPrenom() + " modifié avec succès !");
+                friendUpdated = friend;
+            } else {
+                logsInformations.affichageLogDate("Ami avec id " + friendDto.getId() + " non trouvé !");
+            }
+        } catch (Exception e) {
+            logsInformations.affichageLogDate("Erreur rencontré : " + e.getMessage());
+        }
+        return friendUpdated;
     }
 
     public boolean resetPassword(PasswordDto dto) {

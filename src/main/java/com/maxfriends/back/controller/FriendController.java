@@ -2,6 +2,7 @@ package com.maxfriends.back.controller;
 
 import com.maxfriends.back.dto.FriendDto;
 import com.maxfriends.back.dto.PasswordDto;
+import com.maxfriends.back.entity.Friend;
 import com.maxfriends.back.entity.Sortie;
 import com.maxfriends.back.service.IFriendService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,11 @@ public class FriendController {
     @PostMapping("/{friendId}/upload/profile-image")
     public boolean uploadImgaeToDB(@PathVariable Long friendId, @RequestParam("imageFile") MultipartFile imageFile) {
         return this.friendService.uploadImgaeToDB(imageFile, friendId);
+    }
+
+    @PutMapping
+    public Friend updateUser(@RequestBody FriendDto friendDto) {
+        return this.friendService.updateUser(friendDto);
     }
 
     @PutMapping("/resetPassword")

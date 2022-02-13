@@ -2,6 +2,7 @@ package com.maxfriends.back.service;
 
 import com.maxfriends.back.dto.FriendDto;
 import com.maxfriends.back.dto.PasswordDto;
+import com.maxfriends.back.entity.Friend;
 import com.maxfriends.back.entity.Sortie;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,4 +25,6 @@ public interface IFriendService {
     boolean createFriend(FriendDto friendDto);
 
     boolean uploadImgaeToDB(MultipartFile imageFile, Long friendId);
+
+    Friend updateUser(FriendDto friendDto);
 }

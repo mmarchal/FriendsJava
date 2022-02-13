@@ -24,6 +24,8 @@ public class FriendDto {
 
     String email;
 
+    byte[] profileImage;
+
     boolean mdpProvisoire;
 
     String codeMdp;

@@ -37,6 +37,10 @@ public class Friend implements Serializable {
     @Column
     String email;
 
+    @Lob
+    @Column(name = "profile_image")
+    private byte[] profileImage;
+
     @Column(columnDefinition = "boolean default false")
     boolean mdpProvisoire;
 

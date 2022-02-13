@@ -16,10 +16,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -61,6 +63,31 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
             logsInformations.affichageLogDate("Erreur lors de la création de compte : " + e.getMessage());
             return false;
         }
+    }
+
+    @Override
+    public boolean uploadImgaeToDB(MultipartFile imageFile, Long friendId) {
+        boolean retourUpload = false;
+        Optional<Friend> optionalFriend = friendRepository.findById(friendId);
+        if(optionalFriend.isPresent()) {
+            Friend f = optionalFriend.get();
+            logsInformations.affichageLogDate("Ami " + f.getPrenom() + " trouvé !");
+            try {
+                byte[] imageArr = imageFile.getBytes();
+                f.setProfileImage(imageArr);
+                logsInformations.affichageLogDate("Image pour " + f.getPrenom() + " ajouté !");
+                friendRepository.save(f);
+                retourUpload = true;
+            } catch (IOException e) {
+                retourUpload = false;
+                e.printStackTrace();
+            }
+        } else {
+            logsInformations.affichageLogDate("Ami " + friendId + " non trouvé !");
+            retourUpload = false;
+        }
+
+        return retourUpload;
     }
 
     public boolean resetPassword(PasswordDto dto) {

@@ -36,7 +36,7 @@ public class FriendController {
     }
 
     @PostMapping("/{friendId}/upload/profile-image")
-    public boolean uploadImgaeToDB(@PathVariable Long friendId, @RequestParam("imageFile") MultipartFile imageFile) {
+    public boolean uploadImgaeToDB(@PathVariable Long friendId, @RequestBody MultipartFile imageFile) {
         return this.friendService.uploadImgaeToDB(imageFile, friendId);
     }
 

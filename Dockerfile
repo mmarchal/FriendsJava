@@ -11,6 +11,6 @@ COPY /src/main/resources/application.properties .
 
 RUN mvn package
 
-EXPOSE 19998
+EXPOSE 20000
 
 ENTRYPOINT ["java","-jar","/app/target/back-0.0.1-SNAPSHOT.jar"]

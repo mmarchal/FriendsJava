@@ -31,7 +31,7 @@ public class FriendController {
     }
 
     @PostMapping
-    public boolean createUser(@RequestBody FriendDto friendDto){
+    public Friend createUser(@RequestBody FriendDto friendDto){
         return this.friendService.createFriend(friendDto);
     }
 

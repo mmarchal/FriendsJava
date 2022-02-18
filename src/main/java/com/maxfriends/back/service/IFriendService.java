@@ -22,7 +22,7 @@ public interface IFriendService {
 
     Collection<Sortie> getSortiesOfFriend(Long id);
 
-    boolean createFriend(FriendDto friendDto);
+    Friend createFriend(FriendDto friendDto);
 
     boolean uploadImgaeToDB(MultipartFile imageFile, Long friendId);
 

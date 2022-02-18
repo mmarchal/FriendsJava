@@ -46,7 +46,7 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
         return this.friendConverter.entityToDto(this.friendRepository.getOne(Long.parseLong(id)), FriendDto.class);
     }
 
-    public boolean createFriend(FriendDto dto) {
+    public Friend createFriend(FriendDto dto) {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -58,10 +58,10 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
         try {
             this.friendRepository.save(friend);
             logsInformations.affichageLogDate("Création compte client de " + dto.getPrenom());
-            return true;
+            return friend;
         } catch (Exception e) {
             logsInformations.affichageLogDate("Erreur lors de la création de compte : " + e.getMessage());
-            return false;
+            return null;
         }
     }
 

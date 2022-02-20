@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -77,5 +78,14 @@ public class ChannelController {
         }
         return this.channelService.deleteMessageById(messageId);
     }
+
+    @GetMapping("/message/{channelId}")
+    public Collection<MessageDto> getMessagesFromChannel(@PathVariable(name="channelId") Long channelId) throws ApiException {
+        if(channelId == null || channelId == 0){
+            throw new ApiException("channelId cannot be empty !", HttpStatus.NO_CONTENT);
+        }
+        return this.channelService.getMessagesFromChannel(channelId);
+    }
+
 
 }

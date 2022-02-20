@@ -19,4 +19,6 @@ public interface IChannelService {
     boolean createMessageByChannelId(MessageDto messageDto, Long channelId) throws ApiException;
 
     boolean deleteMessageById(Long messageId)throws ApiException;
+
+    Collection<MessageDto> getMessagesFromChannel(Long channelId) throws ApiException;
 }

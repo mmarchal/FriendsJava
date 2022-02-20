@@ -189,4 +189,13 @@ public class ChannelServiceImpl implements IChannelService {
         logsInformations.affichageLogDate("Suppression du message portant l'id : "+messageId);
         return true;
     }
+
+    @Override
+    public Collection<MessageDto> getMessagesFromChannel(Long channelId) throws ApiException {
+        if(!this.channelRepo.existsById(channelId)){
+            throw new ApiException("Aucun channel avec l'id "+channelId+" n'existe !", HttpStatus.NOT_FOUND);
+        }
+        logsInformations.affichageLogDate("Récupération des messages du channel avec l'id : "+channelId);
+        return this.messageConverter.entitiesToDtos(this.messageRepo.getMessagesFromChannel(channelId), MessageDto.class);
+    }
 }

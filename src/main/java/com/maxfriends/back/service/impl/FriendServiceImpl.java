@@ -5,6 +5,9 @@ import com.maxfriends.back.dto.FriendDto;
 import com.maxfriends.back.dto.PasswordDto;
 import com.maxfriends.back.entity.Friend;
 import com.maxfriends.back.entity.Sortie;
+import com.maxfriends.back.firebase.FirebaseRequest;
+import com.maxfriends.back.firebase.FirebaseService;
+import com.maxfriends.back.firebase.FirebaseUpdate;
 import com.maxfriends.back.repository.FriendRepository;
 import com.maxfriends.back.service.IFriendService;
 import com.maxfriends.back.utilities.LogsInformations;
@@ -24,6 +27,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 @Service(value = "friendService")
 public class FriendServiceImpl implements UserDetailsService, IFriendService {
@@ -36,8 +40,19 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
     @Autowired
     GenericConverter<Friend, FriendDto> friendConverter;
 
+    @Autowired
+    FirebaseRequest firebaseRequest;
+
     public Collection<FriendDto> getAll() {
         logsInformations.affichageLogDate("Récupération de la liste des amis");
+        try {
+            FirebaseUpdate firebaseUpdate = new FirebaseUpdate();
+            firebaseUpdate.setDateModification(LocalDateTime.now());
+            firebaseUpdate.setFonctionAppele("getAll()");
+            firebaseRequest.saveUpdateDetails(firebaseUpdate);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
         return friendConverter.entitiesToDtos(this.friendRepository.findAll(), FriendDto.class);
     }
 

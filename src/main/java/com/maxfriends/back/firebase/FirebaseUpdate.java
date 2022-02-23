@@ -18,4 +18,6 @@ public class FirebaseUpdate {
     Long friendId;
 
     String pamametres;
+
+    boolean etatRequete;
 }

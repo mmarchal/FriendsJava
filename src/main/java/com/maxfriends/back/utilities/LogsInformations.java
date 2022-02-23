@@ -1,15 +1,23 @@
 package com.maxfriends.back.utilities;
 
 
+import com.maxfriends.back.firebase.FirebaseRequest;
+import com.maxfriends.back.firebase.FirebaseUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 public class LogsInformations {
 
     Logger logger = LoggerFactory.getLogger(LogsInformations.class);
+
+    @Autowired
+    FirebaseRequest firebaseRequest;
 
     public void affichageLogDate(String data) {
         Date date = new Date();
@@ -40,6 +48,18 @@ public class LogsInformations {
         return sb.toString();
     }
 
+    public void sendToFirebase(String methode, String params, boolean etat) {
+        try {
+            FirebaseUpdate firebaseUpdate = new FirebaseUpdate();
+            firebaseUpdate.setDateModification(LocalDateTime.now());
+            firebaseUpdate.setFonctionAppele(methode);
+            firebaseUpdate.setEtatRequete(etat);
+            if(!params.isEmpty()) firebaseUpdate.setPamametres(params);
+            firebaseRequest.saveUpdateDetails(firebaseUpdate);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

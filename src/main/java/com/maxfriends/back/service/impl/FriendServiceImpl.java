@@ -40,25 +40,31 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
     @Autowired
     GenericConverter<Friend, FriendDto> friendConverter;
 
-    @Autowired
-    FirebaseRequest firebaseRequest;
-
     public Collection<FriendDto> getAll() {
+        Collection<FriendDto> collection = Collections.EMPTY_LIST;
         logsInformations.affichageLogDate("Récupération de la liste des amis");
         try {
-            FirebaseUpdate firebaseUpdate = new FirebaseUpdate();
-            firebaseUpdate.setDateModification(LocalDateTime.now());
-            firebaseUpdate.setFonctionAppele("getAll()");
-            firebaseRequest.saveUpdateDetails(firebaseUpdate);
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            collection = friendConverter.entitiesToDtos(this.friendRepository.findAll(), FriendDto.class);
+            logsInformations.sendToFirebase(getClass().getName(), "", true);
+        } catch (Exception e) {
+            logsInformations.affichageLogDate(e.getMessage());
+            logsInformations.sendToFirebase(getClass().getName(), "", false);
+            collection = Collections.EMPTY_LIST;
         }
-        return friendConverter.entitiesToDtos(this.friendRepository.findAll(), FriendDto.class);
+        return collection;
     }
 
     public FriendDto loadById(String id) {
+        FriendDto friendDto;
         logsInformations.affichageLogDate("Récupération des données du n°" + id);
-        return this.friendConverter.entityToDto(this.friendRepository.getOne(Long.parseLong(id)), FriendDto.class);
+        try {
+            friendDto = this.friendConverter.entityToDto(this.friendRepository.getOne(Long.parseLong(id)), FriendDto.class);
+            logsInformations.sendToFirebase(getClass().getName(), id, true);
+        } catch (Exception e) {
+            friendDto = null;
+            logsInformations.sendToFirebase(getClass().getName(), id, false);
+        }
+        return friendDto;
     }
 
     public Friend createFriend(FriendDto dto) {
@@ -73,16 +79,19 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
         try {
             this.friendRepository.save(friend);
             logsInformations.affichageLogDate("Création compte client de " + dto.getPrenom());
+            logsInformations.sendToFirebase(getClass().getName(), dto.toString(), true);
             return friend;
         } catch (Exception e) {
             logsInformations.affichageLogDate("Erreur lors de la création de compte : " + e.getMessage());
+            logsInformations.sendToFirebase(getClass().getName(), dto.toString(), false);
             return null;
         }
     }
 
     @Override
     public boolean uploadImgaeToDB(MultipartFile imageFile, Long friendId) {
-        boolean retourUpload = false;
+        boolean retourUpload;
+        List<String> args = Arrays.asList(imageFile.getName(), friendId.toString());
         Optional<Friend> optionalFriend = friendRepository.findById(friendId);
         if (optionalFriend.isPresent()) {
             Friend f = optionalFriend.get();
@@ -92,13 +101,16 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
                 f.setProfileImage(imageArr);
                 logsInformations.affichageLogDate("Image pour " + f.getPrenom() + " ajouté !");
                 friendRepository.save(f);
+                logsInformations.sendToFirebase(getClass().getName(), args.toString(), true);
                 retourUpload = true;
             } catch (IOException e) {
                 retourUpload = false;
+                logsInformations.sendToFirebase(getClass().getName(), args.toString(), false);
                 e.printStackTrace();
             }
         } else {
             logsInformations.affichageLogDate("Ami " + friendId + " non trouvé !");
+            logsInformations.sendToFirebase(getClass().getName(), args.toString(), false);
             retourUpload = false;
         }
 
@@ -118,20 +130,24 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
                 this.friendRepository.save(friend);
                 logsInformations.affichageLogDate("Données de l'utilisateur " + friend.getPrenom() + " modifié avec succès !");
                 friendUpdated = friend;
+                logsInformations.sendToFirebase(getClass().getName(), friendDto.toString(), true);
             } else {
                 logsInformations.affichageLogDate("Ami avec id " + friendDto.getId() + " non trouvé !");
+                logsInformations.sendToFirebase(getClass().getName(), friendDto.toString(), false);
             }
         } catch (Exception e) {
             logsInformations.affichageLogDate("Erreur rencontré : " + e.getMessage());
+            logsInformations.sendToFirebase(getClass().getName(), friendDto.toString(), false);
         }
         return friendUpdated;
     }
 
     public boolean resetPassword(PasswordDto dto) {
         Friend friend = this.friendRepository.findByLogin(dto.getUserLogin());
-        boolean retourFonction = false;
+        boolean retourFonction;
         if (friend == null) {
             logsInformations.affichageLogDate("Username ou password incorrect");
+            logsInformations.sendToFirebase(getClass().getName(), dto.toString(), false);
             throw new UsernameNotFoundException("Invalid username or password !");
         } else {
             BCryptPasswordEncoder encoderNew = new BCryptPasswordEncoder();
@@ -143,13 +159,16 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
                 try {
                     this.friendRepository.save(friend);
                     retourFonction = true;
+                    logsInformations.sendToFirebase(getClass().getName(), dto.toString(), true);
                     logsInformations.affichageLogDate("Mot de passe pour " + friend.getLogin() + " modifié avec succès !");
                 } catch (Exception e) {
                     retourFonction = false;
                     logsInformations.affichageLogDate("PB avec la modification du mot de passe : " + e.getMessage());
+                    logsInformations.sendToFirebase(getClass().getName(), dto.toString(), false);
                 }
             } else {
                 logsInformations.affichageLogDate("Token incorrect !");
+                logsInformations.sendToFirebase(getClass().getName(), dto.toString(), false);
                 throw new UsernameNotFoundException("Token incorrect !");
             }
         }
@@ -157,26 +176,32 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
     }
 
     public boolean checkingTempPassword(String username, String tempString) {
-        boolean retourChecking = false;
+        boolean retourChecking;
+        List<String> args = Arrays.asList(username, tempString);
         Friend friend = this.friendRepository.findByLogin(username);
         LocalDateTime date = LocalDateTime.now();
         if(friend==null) {
             logsInformations.affichageLogDate("Ami " + username + " non trouvé !");
+            logsInformations.sendToFirebase(getClass().getName(), args.toString(), false);
             retourChecking = false;
         } else {
             if(!friend.isMdpProvisoire()) {
                 logsInformations.affichageLogDate("Client " + friend.getPrenom() + " n'a pas demandé de réinitialisation !");
                 retourChecking = false;
+                logsInformations.sendToFirebase(getClass().getName(), args.toString(), false);
             } else if (friend.isMdpProvisoire() && !tempString.equals(friend.getCodeMdp())) {
                 logsInformations.affichageLogDate("Autorisation de modification de MDP non accordé pour " + friend.getPrenom());
                 retourChecking = false;
+                logsInformations.sendToFirebase(getClass().getName(), args.toString(), false);
             } else {
                 if(friend.getDateExpiration().isBefore(date)) {
                     logsInformations.affichageLogDate("Date d'expiration dépassé !");
                     retourChecking = false;
+                    logsInformations.sendToFirebase(getClass().getName(), args.toString(), false);
                 } else {
                     logsInformations.affichageLogDate("Autorisation de modification de MDP accordé pour " + friend.getPrenom());
                     retourChecking = true;
+                    logsInformations.sendToFirebase(getClass().getName(), args.toString(), true);
                 }
             }
         }
@@ -188,6 +213,7 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
         Friend friend = this.friendRepository.findByLogin(u);
         if(friend==null) {
             logsInformations.affichageLogDate("Ami non trouvé !");
+            logsInformations.sendToFirebase(getClass().getName(), u, false);
         } else {
             logsInformations.affichageLogDate("Ami " + friend.getPrenom() + " identifié !");
             String email = friend.getEmail();
@@ -214,6 +240,7 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
             if(email==null || email.equals("")) {
                 logsInformations.affichageLogDate("Ami " + friend.getPrenom() + " n'a pas d'adresse mail");
                 mailEnvoye = false;
+                logsInformations.sendToFirebase(getClass().getName(), u, false);
             } else {
                 try {
                     String codeProvisoireClient = logsInformations.getRandomPassword(20);
@@ -230,14 +257,14 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
                     Transport.send(message);
                     logsInformations.affichageLogDate("Sent message successfully....");
                     mailEnvoye=true;
+                    logsInformations.sendToFirebase(getClass().getName(), u, true);
                 } catch (MessagingException mex) {
+                    logsInformations.sendToFirebase(getClass().getName(), u, false);
                     mex.printStackTrace();
                     mailEnvoye=false;
                 }
             }
         }
-
-
 
         return mailEnvoye;
     }
@@ -262,8 +289,10 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
         if(friend.isPresent()) {
             logsInformations.affichageLogDate("Ami " + friend.get().getPrenom() + " trouvé !");
             listeSorties.addAll(friend.get().getSorties());
+            logsInformations.sendToFirebase(getClass().getName(), id.toString(), true);
         } else {
             logsInformations.affichageLogDate("Ami avec id n°" + id + " non trouvé !");
+            logsInformations.sendToFirebase(getClass().getName(), id.toString(), false);
         }
         return listeSorties;
     }

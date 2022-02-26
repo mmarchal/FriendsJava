@@ -1,10 +1,14 @@
 package com.maxfriends.back.service.impl;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserRecord;
+import com.google.firebase.database.FirebaseDatabase;
 import com.maxfriends.back.converter.GenericConverter;
 import com.maxfriends.back.dto.FriendDto;
 import com.maxfriends.back.dto.PasswordDto;
 import com.maxfriends.back.entity.Friend;
 import com.maxfriends.back.entity.Sortie;
+import com.maxfriends.back.firebase.FirebaseConversion;
 import com.maxfriends.back.firebase.FirebaseRequest;
 import com.maxfriends.back.firebase.FirebaseService;
 import com.maxfriends.back.firebase.FirebaseUpdate;
@@ -39,6 +43,8 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
 
     @Autowired
     GenericConverter<Friend, FriendDto> friendConverter;
+
+    FirebaseConversion firebaseConversion;
 
     public Collection<FriendDto> getAll() {
         Collection<FriendDto> collection = Collections.EMPTY_LIST;
@@ -80,6 +86,7 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
             this.friendRepository.save(friend);
             logsInformations.affichageLogDate("Création compte client de " + dto.getPrenom());
             logsInformations.sendToFirebase(getClass().getName(), dto.toString(), true);
+            FirebaseAuth.getInstance().createUser(firebaseConversion.convertFriendToUser(friend));
             return friend;
         } catch (Exception e) {
             logsInformations.affichageLogDate("Erreur lors de la création de compte : " + e.getMessage());

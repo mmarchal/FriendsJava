@@ -44,7 +44,7 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
     @Autowired
     GenericConverter<Friend, FriendDto> friendConverter;
 
-    FirebaseConversion firebaseConversion;
+    FirebaseConversion firebaseConversion = new FirebaseConversion();
 
     public Collection<FriendDto> getAll() {
         Collection<FriendDto> collection = Collections.EMPTY_LIST;
@@ -84,13 +84,14 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
 
         try {
             this.friendRepository.save(friend);
-            logsInformations.affichageLogDate("Création compte client de " + dto.getPrenom());
             logsInformations.sendToFirebase(getClass().getName(), dto.toString(), true);
             FirebaseAuth.getInstance().createUser(firebaseConversion.convertFriendToUser(friend));
+            logsInformations.affichageLogDate("Création compte client de " + dto.getPrenom());
             return friend;
         } catch (Exception e) {
             logsInformations.affichageLogDate("Erreur lors de la création de compte : " + e.getMessage());
             logsInformations.sendToFirebase(getClass().getName(), dto.toString(), false);
+            e.printStackTrace();
             return null;
         }
     }

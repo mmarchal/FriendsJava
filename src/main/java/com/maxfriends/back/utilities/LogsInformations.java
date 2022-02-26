@@ -17,7 +17,7 @@ public class LogsInformations {
     Logger logger = LoggerFactory.getLogger(LogsInformations.class);
 
     @Autowired
-    FirebaseRequest firebaseRequest;
+    FirebaseRequest firebaseRequest = new FirebaseRequest();
 
     public void affichageLogDate(String data) {
         Date date = new Date();

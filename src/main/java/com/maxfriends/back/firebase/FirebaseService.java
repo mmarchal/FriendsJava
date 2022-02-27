@@ -17,13 +17,13 @@ public class FirebaseService {
     public void initialize() {
         try {
             InputStream serviceAccount =
-                    this.getClass().getClassLoader().getResourceAsStream("friendapp.json");
+                    this.getClass().getClassLoader().getResourceAsStream("friendchat.json");
 
             FirebaseOptions options = null;
             if (serviceAccount != null) {
                 options = new FirebaseOptions.Builder()
                         .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                        .setDatabaseUrl("https://friendapp-47c65-default-rtdb.europe-west1.firebasedatabase.app")
+                        .setDatabaseUrl("https://friendchat-4626f-default-rtdb.europe-west1.firebasedatabase.app")
                         .build();
             }
 

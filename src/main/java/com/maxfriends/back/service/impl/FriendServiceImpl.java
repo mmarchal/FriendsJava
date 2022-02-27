@@ -77,9 +77,7 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        Friend friend = new Friend();
-        friend.setPrenom(dto.getPrenom());
-        friend.setLogin(dto.getLogin());
+        Friend friend = friendConverter.dtoToEntity(dto, Friend.class);
         friend.setPassword(encoder.encode(dto.getPassword()));
 
         try {

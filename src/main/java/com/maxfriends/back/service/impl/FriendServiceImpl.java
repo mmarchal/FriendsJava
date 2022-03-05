@@ -83,7 +83,8 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
         try {
             this.friendRepository.save(friend);
             logsInformations.sendToFirebase(getClass().getName(), dto.toString(), true);
-            FirebaseAuth.getInstance().createUser(firebaseConversion.convertFriendToUser(friend));
+            Friend friendToFirebase = friendConverter.dtoToEntity(dto, Friend.class);
+            FirebaseAuth.getInstance().createUser(firebaseConversion.convertFriendToUser(friendToFirebase));
             logsInformations.affichageLogDate("Création compte client de " + dto.getPrenom());
             return friend;
         } catch (Exception e) {

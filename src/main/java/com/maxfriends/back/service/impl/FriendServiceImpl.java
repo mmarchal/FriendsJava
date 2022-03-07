@@ -89,7 +89,7 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
                 put("uid", user.getUid());
                 put("prenom", friend.getPrenom());
             }};
-            FirebaseDatabase.getInstance().getReference().child("users").setValueAsync(map);
+            FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid()).setValueAsync(map);
             logsInformations.affichageLogDate("Création compte client de " + dto.getPrenom());
             return friend;
         } catch (Exception e) {

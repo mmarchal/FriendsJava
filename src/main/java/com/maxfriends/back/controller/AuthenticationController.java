@@ -1,5 +1,6 @@
 package com.maxfriends.back.controller;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.maxfriends.back.entity.Friend;
 import com.maxfriends.back.repository.FriendRepository;
 import com.maxfriends.back.security.config.JwtTokenUtil;
@@ -30,7 +31,7 @@ public class AuthenticationController {
     private LogsInformations logsInformations = new LogsInformations();
 
     @PostMapping()
-    public ApiResponse<AuthToken> register(@RequestBody LoginUser user) throws AuthenticationException {
+    public ApiResponse<AuthToken> register(@RequestBody LoginUser user) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
         Friend friend = friendRepository.findByLogin(user.getUsername());
         String token = jwtTokenUtil.generateToken(friend.getLogin());

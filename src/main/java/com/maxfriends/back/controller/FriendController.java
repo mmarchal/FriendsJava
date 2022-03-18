@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Collection;
 
 @CrossOrigin(origins = "*")
@@ -36,8 +35,8 @@ public class FriendController {
     }
 
     @PostMapping("/{friendId}/upload/profile-image")
-    public boolean uploadImgaeToDB(@PathVariable Long friendId, @RequestBody MultipartFile imageFile) {
-        return this.friendService.uploadImgaeToDB(imageFile, friendId);
+    public boolean uploadImageToDB(@PathVariable Long friendId, @RequestBody MultipartFile imageFile) {
+        return this.friendService.uploadImageToDB(imageFile, friendId);
     }
 
     @PutMapping

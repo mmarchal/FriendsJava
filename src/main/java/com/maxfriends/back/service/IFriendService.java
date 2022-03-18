@@ -24,7 +24,7 @@ public interface IFriendService {
 
     Friend createFriend(FriendDto friendDto);
 
-    boolean uploadImgaeToDB(MultipartFile imageFile, Long friendId);
+    boolean uploadImageToDB(MultipartFile imageFile, Long friendId);
 
     Friend updateUser(FriendDto friendDto);
 }

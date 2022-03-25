@@ -4,13 +4,13 @@ public class AuthToken {
 
     private String token;
     private String username;
-    private Long userId;
+    private String userId;
 
-    public Long getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -18,7 +18,7 @@ public class AuthToken {
 
     }
 
-    public AuthToken(String token, String username, Long userId){
+    public AuthToken(String token, String username, String userId){
         this.token = token;
         this.username = username;
         this.userId = userId;

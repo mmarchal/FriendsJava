@@ -1,8 +1,5 @@
 package com.maxfriends.back.service.impl;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.UserRecord;
-import com.google.firebase.database.FirebaseDatabase;
 import com.maxfriends.back.converter.GenericConverter;
 import com.maxfriends.back.dto.FriendDto;
 import com.maxfriends.back.dto.PasswordDto;
@@ -27,7 +24,6 @@ import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 @Service(value = "friendService")
 public class FriendServiceImpl implements UserDetailsService, IFriendService {
@@ -56,7 +52,7 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
         FriendDto friendDto;
         logsInformations.affichageLogDate("Récupération des données du n°" + id);
         try {
-            friendDto = this.friendConverter.entityToDto(this.friendRepository.getOne(Long.parseLong(id)), FriendDto.class);
+            friendDto = this.friendConverter.entityToDto(this.friendRepository.getByUid(id), FriendDto.class);
         } catch (Exception e) {
             friendDto = null;
         }
@@ -82,10 +78,10 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
     }
 
     @Override
-    public boolean uploadImageToDB(MultipartFile imageFile, Long friendId) {
+    public boolean uploadImageToDB(MultipartFile imageFile, String friendId) {
         boolean retourUpload;
-        List<String> args = Arrays.asList(imageFile.getName(), friendId.toString());
-        Optional<Friend> optionalFriend = friendRepository.findById(friendId);
+        List<String> args = Arrays.asList(imageFile.getName(), friendId);
+        Optional<Friend> optionalFriend = Optional.ofNullable(friendRepository.getByUid(friendId));
         if (optionalFriend.isPresent()) {
             Friend f = optionalFriend.get();
             logsInformations.affichageLogDate("Ami " + f.getPrenom() + " trouvé !");
@@ -110,10 +106,10 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
     public Friend updateUser(FriendDto friendDto) {
         Friend friendUpdated = null;
         try {
-            Optional<Friend> optionalFriend = this.friendRepository.findById(friendDto.getId());
+            Optional<Friend> optionalFriend = Optional.ofNullable(this.friendRepository.getByUid(friendDto.getUid()));
             if(optionalFriend.isPresent()) {
                 Friend friend = optionalFriend.get();
-                logsInformations.affichageLogDate("Ami avec id " + friendDto.getId() + " trouvé ==> " + friend.getPrenom()  + " !");
+                logsInformations.affichageLogDate("Ami avec id " + friendDto.getUid() + " trouvé ==> " + friend.getPrenom()  + " !");
                 friend.setLogin(friendDto.getLogin());
                 friend.setPrenom(friendDto.getPrenom());
                 friend.setEmail(friendDto.getEmail());
@@ -121,7 +117,7 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
                 logsInformations.affichageLogDate("Données de l'utilisateur " + friend.getPrenom() + " modifié avec succès !");
                 friendUpdated = friend;
             } else {
-                logsInformations.affichageLogDate("Ami avec id " + friendDto.getId() + " non trouvé !");
+                logsInformations.affichageLogDate("Ami avec id " + friendDto.getUid() + " non trouvé !");
             }
         } catch (Exception e) {
             logsInformations.affichageLogDate("Erreur rencontré : " + e.getMessage());
@@ -257,8 +253,8 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
         return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 
-    public Collection<Sortie> getSortiesOfFriend(Long id) {
-        Optional<Friend> friend = this.friendRepository.findById(id);
+    public Collection<Sortie> getSortiesOfFriend(String id) {
+        Optional<Friend> friend = Optional.ofNullable(this.friendRepository.getByUid(id));
         Collection<Sortie> listeSorties = new ArrayList<>(Collections.emptyList());
         if(friend.isPresent()) {
             logsInformations.affichageLogDate("Ami " + friend.get().getPrenom() + " trouvé !");

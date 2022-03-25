@@ -59,8 +59,8 @@ public class SortieServiceImpl implements ISortieService {
 
     }
 
-    public boolean addOneFriendToOuting(Long idSortie, Long idFriend) {
-        Optional<Friend> friend = friendRepository.findById(idFriend);
+    public boolean addOneFriendToOuting(Long idSortie, String idFriend) {
+        Optional<Friend> friend = Optional.ofNullable(friendRepository.getByUid(idFriend));
         Optional<Sortie> sortie = sortieRepository.findById(idSortie);
 
         if(friend.isPresent() && sortie.isPresent()) {

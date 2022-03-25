@@ -20,11 +20,11 @@ public interface IFriendService {
 
     boolean getForgotPassword(String u);
 
-    Collection<Sortie> getSortiesOfFriend(Long id);
+    Collection<Sortie> getSortiesOfFriend(String id);
 
     Friend createFriend(FriendDto friendDto);
 
-    boolean uploadImageToDB(MultipartFile imageFile, Long friendId);
+    boolean uploadImageToDB(MultipartFile imageFile, String friendId);
 
     Friend updateUser(FriendDto friendDto);
 }

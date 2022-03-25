@@ -35,7 +35,7 @@ public class FriendController {
     }
 
     @PostMapping("/{friendId}/upload/profile-image")
-    public boolean uploadImageToDB(@PathVariable Long friendId, @RequestBody MultipartFile imageFile) {
+    public boolean uploadImageToDB(@PathVariable String friendId, @RequestBody MultipartFile imageFile) {
         return this.friendService.uploadImageToDB(imageFile, friendId);
     }
 
@@ -60,7 +60,7 @@ public class FriendController {
     }
 
     @GetMapping("/{id}/sorties")
-    public Collection<Sortie> getSortiesOfFriend(@PathVariable Long id) {
+    public Collection<Sortie> getSortiesOfFriend(@PathVariable String id) {
         return this.friendService.getSortiesOfFriend(id);
     }
 }

@@ -13,7 +13,7 @@ public interface ISortieService {
 
     boolean suggestOuting(SortieDto sortieDto);
 
-    boolean addOneFriendToOuting(Long idSortie, Long idFriend);
+    boolean addOneFriendToOuting(Long idSortie, String idFriend);
 
     SortieDto updateDateOfOuting(Long sortieId, LocalDateTime date) ;
 }

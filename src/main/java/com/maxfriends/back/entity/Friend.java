@@ -26,6 +26,9 @@ public class Friend implements Serializable {
     Long id;
 
     @Column
+    String uid;
+
+    @Column
     String prenom;
 
     @Column

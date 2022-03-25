@@ -1,6 +1,5 @@
 package com.maxfriends.back.controller;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.maxfriends.back.entity.Friend;
 import com.maxfriends.back.repository.FriendRepository;
 import com.maxfriends.back.security.config.JwtTokenUtil;
@@ -12,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-
-import javax.naming.AuthenticationException;
 
 @CrossOrigin(origins = "*",maxAge = 3600)
 @RestController
@@ -36,7 +33,7 @@ public class AuthenticationController {
         Friend friend = friendRepository.findByLogin(user.getUsername());
         String token = jwtTokenUtil.generateToken(friend.getLogin());
         logsInformations.affichageLogDate("Utilisateur " + friend.getPrenom() + " connecté !");
-        return new ApiResponse<>(200,"OK",new AuthToken(token,friend.getPrenom(),friend.getId()));
+        return new ApiResponse<>(200,"OK",new AuthToken(token,friend.getPrenom(),friend.getUid()));
     }
 
 }

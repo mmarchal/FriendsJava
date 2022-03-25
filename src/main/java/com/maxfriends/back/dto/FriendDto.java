@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 public class FriendDto {
 
-    Long id;
+    String uid;
 
     String prenom;
 

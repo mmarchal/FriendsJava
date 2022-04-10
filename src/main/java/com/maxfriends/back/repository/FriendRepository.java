@@ -9,4 +9,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
     @Query(value = "select * from friend where login = :login", nativeQuery = true)
     Friend findByLogin(@Param(value = "login") String login);
+
+    @Query(value = "select * from friend where uid = :uid", nativeQuery = true)
+    Friend getByUid(@Param(value = "uid") String uid);
 }

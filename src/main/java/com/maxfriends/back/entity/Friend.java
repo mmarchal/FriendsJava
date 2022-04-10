@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Entity
 @Getter
 @Setter
@@ -25,6 +26,9 @@ public class Friend implements Serializable {
     Long id;
 
     @Column
+    String uid;
+
+    @Column
     String prenom;
 
     @Column
@@ -36,6 +40,10 @@ public class Friend implements Serializable {
     @Column
     String email;
 
+    @Lob
+    @Column(name = "profile_image")
+    private byte[] profileImage;
+
     @Column(columnDefinition = "boolean default false")
     boolean mdpProvisoire;
 
@@ -44,6 +52,14 @@ public class Friend implements Serializable {
 
     @Column
     LocalDateTime dateExpiration;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "friends")
+    private Collection<Channel> channels;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "friend")
+    private Collection<Message> message;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "friends", fetch = FetchType.LAZY)

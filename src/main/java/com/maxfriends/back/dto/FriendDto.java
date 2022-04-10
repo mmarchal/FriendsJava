@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 public class FriendDto {
 
-    Long id;
+    String uid;
 
     String prenom;
 
@@ -23,6 +23,8 @@ public class FriendDto {
     String password;
 
     String email;
+
+    byte[] profileImage;
 
     boolean mdpProvisoire;
 

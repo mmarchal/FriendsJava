@@ -5,7 +5,7 @@ import com.maxfriends.back.dto.SortieDto;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-public interface SortieService {
+public interface ISortieService {
 
     Collection<SortieDto> getAll();
 
@@ -13,7 +13,7 @@ public interface SortieService {
 
     boolean suggestOuting(SortieDto sortieDto);
 
-    boolean addOneFriendToOuting(Long idSortie, Long idFriend);
+    boolean addOneFriendToOuting(Long idSortie, String idFriend);
 
     SortieDto updateDateOfOuting(Long sortieId, LocalDateTime date) ;
 }

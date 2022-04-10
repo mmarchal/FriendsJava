@@ -7,7 +7,7 @@ import com.maxfriends.back.entity.Sortie;
 import com.maxfriends.back.repository.FriendRepository;
 import com.maxfriends.back.repository.SortieRepository;
 import com.maxfriends.back.repository.TypeSortieRepository;
-import com.maxfriends.back.service.SortieService;
+import com.maxfriends.back.service.ISortieService;
 import com.maxfriends.back.utilities.LogsInformations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Service
-public class SortieServiceImpl implements SortieService {
+public class SortieServiceImpl implements ISortieService {
 
     private LogsInformations logsInformations = new LogsInformations();
 
@@ -59,8 +59,8 @@ public class SortieServiceImpl implements SortieService {
 
     }
 
-    public boolean addOneFriendToOuting(Long idSortie, Long idFriend) {
-        Optional<Friend> friend = friendRepository.findById(idFriend);
+    public boolean addOneFriendToOuting(Long idSortie, String idFriend) {
+        Optional<Friend> friend = Optional.ofNullable(friendRepository.getByUid(idFriend));
         Optional<Sortie> sortie = sortieRepository.findById(idSortie);
 
         if(friend.isPresent() && sortie.isPresent()) {

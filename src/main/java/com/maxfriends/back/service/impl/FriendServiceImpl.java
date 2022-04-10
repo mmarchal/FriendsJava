@@ -6,10 +6,8 @@ import com.maxfriends.back.dto.PasswordDto;
 import com.maxfriends.back.entity.Friend;
 import com.maxfriends.back.entity.Sortie;
 import com.maxfriends.back.repository.FriendRepository;
-import com.maxfriends.back.service.FriendService;
+import com.maxfriends.back.service.IFriendService;
 import com.maxfriends.back.utilities.LogsInformations;
-import org.modelmapper.ValidationException;
-import org.modelmapper.spi.ErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -18,15 +16,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service(value = "friendService")
-public class FriendServiceImpl implements UserDetailsService, FriendService {
+public class FriendServiceImpl implements UserDetailsService, IFriendService {
 
     private LogsInformations logsInformations = new LogsInformations();
 
@@ -37,37 +37,97 @@ public class FriendServiceImpl implements UserDetailsService, FriendService {
     GenericConverter<Friend, FriendDto> friendConverter;
 
     public Collection<FriendDto> getAll() {
+        Collection<FriendDto> collection = Collections.EMPTY_LIST;
         logsInformations.affichageLogDate("Récupération de la liste des amis");
-        return friendConverter.entitiesToDtos(this.friendRepository.findAll(), FriendDto.class);
+        try {
+            collection = friendConverter.entitiesToDtos(this.friendRepository.findAll(), FriendDto.class);
+        } catch (Exception e) {
+            logsInformations.affichageLogDate(e.getMessage());
+            collection = Collections.EMPTY_LIST;
+        }
+        return collection;
     }
 
     public FriendDto loadById(String id) {
+        FriendDto friendDto;
         logsInformations.affichageLogDate("Récupération des données du n°" + id);
-        return this.friendConverter.entityToDto(this.friendRepository.getOne(Long.parseLong(id)), FriendDto.class);
+        try {
+            friendDto = this.friendConverter.entityToDto(this.friendRepository.getByUid(id), FriendDto.class);
+        } catch (Exception e) {
+            friendDto = null;
+        }
+        return friendDto;
     }
 
-    public boolean createFriend(FriendDto dto) {
+    public Friend createFriend(FriendDto dto) {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        Friend friend = new Friend();
-        friend.setPrenom(dto.getPrenom());
-        friend.setLogin(dto.getLogin());
+        Friend friend = friendConverter.dtoToEntity(dto, Friend.class);
         friend.setPassword(encoder.encode(dto.getPassword()));
 
         try {
             this.friendRepository.save(friend);
             logsInformations.affichageLogDate("Création compte client de " + dto.getPrenom());
-            return true;
+            return friend;
         } catch (Exception e) {
             logsInformations.affichageLogDate("Erreur lors de la création de compte : " + e.getMessage());
-            return false;
+            e.printStackTrace();
+            return null;
         }
+    }
+
+    @Override
+    public boolean uploadImageToDB(MultipartFile imageFile, String friendId) {
+        boolean retourUpload;
+        List<String> args = Arrays.asList(imageFile.getName(), friendId);
+        Optional<Friend> optionalFriend = Optional.ofNullable(friendRepository.getByUid(friendId));
+        if (optionalFriend.isPresent()) {
+            Friend f = optionalFriend.get();
+            logsInformations.affichageLogDate("Ami " + f.getPrenom() + " trouvé !");
+            try {
+                byte[] imageArr = imageFile.getBytes();
+                f.setProfileImage(imageArr);
+                logsInformations.affichageLogDate("Image pour " + f.getPrenom() + " ajouté !");
+                friendRepository.save(f);
+                retourUpload = true;
+            } catch (IOException e) {
+                retourUpload = false;
+                e.printStackTrace();
+            }
+        } else {
+            logsInformations.affichageLogDate("Ami " + friendId + " non trouvé !");
+            retourUpload = false;
+        }
+
+        return retourUpload;
+    }
+
+    public Friend updateUser(FriendDto friendDto) {
+        Friend friendUpdated = null;
+        try {
+            Optional<Friend> optionalFriend = Optional.ofNullable(this.friendRepository.getByUid(friendDto.getUid()));
+            if(optionalFriend.isPresent()) {
+                Friend friend = optionalFriend.get();
+                logsInformations.affichageLogDate("Ami avec id " + friendDto.getUid() + " trouvé ==> " + friend.getPrenom()  + " !");
+                friend.setLogin(friendDto.getLogin());
+                friend.setPrenom(friendDto.getPrenom());
+                friend.setEmail(friendDto.getEmail());
+                this.friendRepository.save(friend);
+                logsInformations.affichageLogDate("Données de l'utilisateur " + friend.getPrenom() + " modifié avec succès !");
+                friendUpdated = friend;
+            } else {
+                logsInformations.affichageLogDate("Ami avec id " + friendDto.getUid() + " non trouvé !");
+            }
+        } catch (Exception e) {
+            logsInformations.affichageLogDate("Erreur rencontré : " + e.getMessage());
+        }
+        return friendUpdated;
     }
 
     public boolean resetPassword(PasswordDto dto) {
         Friend friend = this.friendRepository.findByLogin(dto.getUserLogin());
-        boolean retourFonction = false;
+        boolean retourFonction;
         if (friend == null) {
             logsInformations.affichageLogDate("Username ou password incorrect");
             throw new UsernameNotFoundException("Invalid username or password !");
@@ -95,7 +155,8 @@ public class FriendServiceImpl implements UserDetailsService, FriendService {
     }
 
     public boolean checkingTempPassword(String username, String tempString) {
-        boolean retourChecking = false;
+        boolean retourChecking;
+        List<String> args = Arrays.asList(username, tempString);
         Friend friend = this.friendRepository.findByLogin(username);
         LocalDateTime date = LocalDateTime.now();
         if(friend==null) {
@@ -175,8 +236,6 @@ public class FriendServiceImpl implements UserDetailsService, FriendService {
             }
         }
 
-
-
         return mailEnvoye;
     }
 
@@ -194,8 +253,8 @@ public class FriendServiceImpl implements UserDetailsService, FriendService {
         return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 
-    public Collection<Sortie> getSortiesOfFriend(Long id) {
-        Optional<Friend> friend = this.friendRepository.findById(id);
+    public Collection<Sortie> getSortiesOfFriend(String id) {
+        Optional<Friend> friend = Optional.ofNullable(this.friendRepository.getByUid(id));
         Collection<Sortie> listeSorties = new ArrayList<>(Collections.emptyList());
         if(friend.isPresent()) {
             logsInformations.affichageLogDate("Ami " + friend.get().getPrenom() + " trouvé !");

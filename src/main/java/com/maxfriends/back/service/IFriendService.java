@@ -2,11 +2,13 @@ package com.maxfriends.back.service;
 
 import com.maxfriends.back.dto.FriendDto;
 import com.maxfriends.back.dto.PasswordDto;
+import com.maxfriends.back.entity.Friend;
 import com.maxfriends.back.entity.Sortie;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 
-public interface FriendService {
+public interface IFriendService {
 
     Collection<FriendDto> getAll();
 
@@ -18,5 +20,11 @@ public interface FriendService {
 
     boolean getForgotPassword(String u);
 
-    Collection<Sortie> getSortiesOfFriend(Long id);
+    Collection<Sortie> getSortiesOfFriend(String id);
+
+    Friend createFriend(FriendDto friendDto);
+
+    boolean uploadImageToDB(MultipartFile imageFile, String friendId);
+
+    Friend updateUser(FriendDto friendDto);
 }

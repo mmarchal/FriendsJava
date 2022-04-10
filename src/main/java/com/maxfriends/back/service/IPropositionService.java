@@ -5,7 +5,7 @@ import com.maxfriends.back.entity.TypeProposition;
 
 import java.util.Collection;
 
-public interface PropositionService {
+public interface IPropositionService {
 
     Collection<PropositionDto> getAll();
 

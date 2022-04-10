@@ -32,7 +32,7 @@ public class SortieController {
     }
 
     @PutMapping("/{sortieId}/{friendId}")
-    public boolean addOneFriendToOuting(@PathVariable Long sortieId, @PathVariable Long friendId){
+    public boolean addOneFriendToOuting(@PathVariable Long sortieId, @PathVariable String friendId){
         return this.sortieService.addOneFriendToOuting(sortieId, friendId);
     }
 

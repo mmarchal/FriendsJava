@@ -2,10 +2,12 @@ package com.maxfriends.back.controller;
 
 import com.maxfriends.back.dto.FriendDto;
 import com.maxfriends.back.dto.PasswordDto;
+import com.maxfriends.back.entity.Friend;
 import com.maxfriends.back.entity.Sortie;
-import com.maxfriends.back.service.impl.FriendServiceImpl;
+import com.maxfriends.back.service.IFriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 
@@ -15,7 +17,7 @@ import java.util.Collection;
 public class FriendController {
 
     @Autowired
-    FriendServiceImpl friendService;
+    IFriendService friendService;
 
     @GetMapping
     public Collection<FriendDto> getUsers(){
@@ -28,8 +30,18 @@ public class FriendController {
     }
 
     @PostMapping
-    public boolean createUser(@RequestBody FriendDto friendDto){
+    public Friend createUser(@RequestBody FriendDto friendDto){
         return this.friendService.createFriend(friendDto);
+    }
+
+    @PostMapping("/{friendId}/upload/profile-image")
+    public boolean uploadImageToDB(@PathVariable String friendId, @RequestBody MultipartFile imageFile) {
+        return this.friendService.uploadImageToDB(imageFile, friendId);
+    }
+
+    @PutMapping
+    public Friend updateUser(@RequestBody FriendDto friendDto) {
+        return this.friendService.updateUser(friendDto);
     }
 
     @PutMapping("/resetPassword")
@@ -48,7 +60,7 @@ public class FriendController {
     }
 
     @GetMapping("/{id}/sorties")
-    public Collection<Sortie> getSortiesOfFriend(@PathVariable Long id) {
+    public Collection<Sortie> getSortiesOfFriend(@PathVariable String id) {
         return this.friendService.getSortiesOfFriend(id);
     }
 }

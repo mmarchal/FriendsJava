@@ -1,10 +1,8 @@
 package com.maxfriends.back.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.util.Value;
 import com.google.gson.Gson;
 import com.maxfriends.back.dto.FirebaseAuthObjectDto;
-import com.maxfriends.back.entity.FirebaseConfiguration;
 import com.maxfriends.back.security.model.LoginUser;
 import com.maxfriends.back.service.IFirebaseService;
 import com.maxfriends.back.utilities.LogsInformations;
@@ -34,7 +32,7 @@ public class FirebaseServiceImpl implements IFirebaseService {
         String key = env.getProperty("firebase.configuration.firebaseLoginKey");
         String returnSecureToken = env.getProperty("firebase.configuration.firebaseLoginReturnSecureToken");
 
-        HashMap<String, String> values = new HashMap<>() {{
+        HashMap values = new HashMap() {{
             put("email", loginUser.getUsername());
             put("password", loginUser.getPassword());
             put("returnSecureToken", returnSecureToken);

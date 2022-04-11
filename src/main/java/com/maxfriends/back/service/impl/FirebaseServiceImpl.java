@@ -2,6 +2,7 @@ package com.maxfriends.back.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.util.Value;
+import com.google.gson.Gson;
 import com.maxfriends.back.dto.FirebaseAuthObjectDto;
 import com.maxfriends.back.entity.FirebaseConfiguration;
 import com.maxfriends.back.security.model.LoginUser;
@@ -23,6 +24,8 @@ public class FirebaseServiceImpl implements IFirebaseService {
 
     @Autowired
     private Environment env;
+
+    LogsInformations logsInformations = new LogsInformations();
 
     @Override
     public FirebaseAuthObjectDto signWithLoginAndPassword(LoginUser loginUser) throws IOException, InterruptedException {
@@ -50,10 +53,10 @@ public class FirebaseServiceImpl implements IFirebaseService {
                 HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() == 200) {
-            new LogsInformations().affichageLogDate(response.body());
-            //firebaseAuthObjectDto = new FirebaseAuthObjectDto();
+            firebaseAuthObjectDto = new Gson().fromJson(response.body(), FirebaseAuthObjectDto.class);
+            logsInformations.affichageLogDate("Utilisateur " + firebaseAuthObjectDto.getDisplayName() + " connecté !");
         } else {
-            new LogsInformations().affichageLogDate(String.valueOf(response.statusCode()));
+            logsInformations.affichageLogDate("Erreur lors de la connexion !");
         }
         return firebaseAuthObjectDto;
     }

@@ -1,6 +1,7 @@
 package com.maxfriends.back.controller;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.maxfriends.back.dto.FirebaseAuthObjectDto;
 import com.maxfriends.back.entity.Friend;
 import com.maxfriends.back.repository.FriendRepository;
 import com.maxfriends.back.security.config.JwtTokenUtil;
@@ -35,16 +36,19 @@ public class AuthenticationController {
 
     @PostMapping()
     public ApiResponse<AuthToken> register(@RequestBody LoginUser user) {
-        //authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
+        FirebaseAuthObjectDto friend = null;
         try {
-            firebaseService.signWithLoginAndPassword(user);
+            friend = firebaseService.signWithLoginAndPassword(user);
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            logsInformations.affichageLogDate("Erreur : " + e.getMessage());
         }
-        Friend friend = friendRepository.findByLogin(user.getUsername());
-        String token = jwtTokenUtil.generateToken(friend.getLogin());
-        logsInformations.affichageLogDate("Utilisateur " + friend.getPrenom() + " connecté !");
-        return new ApiResponse<>(200,"OK",new AuthToken(token,friend.getPrenom(),friend.getUid()));
+        if(friend!=null) {
+            String token = jwtTokenUtil.generateToken(friend.getEmail());
+            logsInformations.affichageLogDate("Utilisateur " + friend.getDisplayName() + " connecté !");
+            return new ApiResponse<>(200,"OK",new AuthToken(token,friend.getDisplayName(),friend.getLocalId()));
+        } else {
+            return null;
+        }
     }
 
 }

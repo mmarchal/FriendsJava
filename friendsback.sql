@@ -74,8 +74,8 @@ CREATE TABLE IF NOT EXISTS `friend` (
 --
 
 INSERT INTO `friend` (`id`, `code_mdp`, `date_expiration`, `email`, `login`, `mdp_provisoire`, `password`, `prenom`, `profile_image`, `uid`) VALUES
-(1, NULL, NULL, 'max@gmail.com', NULL, 0, '$2a$10$h9HEn82/OSoMfkgm.8iMy.wQiGBwqNoHsohNzUqgQL5WflE6/MKB6', 'max', NULL, 'h09by5e3b6dSuv4lzItQQPRTLP43'),
-(2, NULL, NULL, 'emulateur@gmail.com', NULL, 0, '$2a$10$uz14TTbJTRMQsqTbsu9PHuJCWJPRsdNDTYQS6bxKIFOk4Q32LfEzu', 'emulateur', NULL, 'K3FYx4pD7mfvPsuANuthxD4bAQr1');
+(1, NULL, NULL, 'max@gmail.com', 'max@gmail.com', 0, '$2a$10$h9HEn82/OSoMfkgm.8iMy.wQiGBwqNoHsohNzUqgQL5WflE6/MKB6', 'max', NULL, 'h09by5e3b6dSuv4lzItQQPRTLP43'),
+(2, NULL, NULL, 'emulateur@gmail.com', 'emulateur@gmail.com', 0, '$2a$10$uz14TTbJTRMQsqTbsu9PHuJCWJPRsdNDTYQS6bxKIFOk4Q32LfEzu', 'emulateur', NULL, 'K3FYx4pD7mfvPsuANuthxD4bAQr1');
 
 -- --------------------------------------------------------
 

@@ -52,7 +52,6 @@ public class FirebaseServiceImpl implements IFirebaseService {
 
         if (response.statusCode() == 200) {
             firebaseAuthObjectDto = new Gson().fromJson(response.body(), FirebaseAuthObjectDto.class);
-            logsInformations.affichageLogDate("Utilisateur " + firebaseAuthObjectDto.getDisplayName() + " connecté !");
         } else {
             logsInformations.affichageLogDate("Erreur lors de la connexion !");
         }

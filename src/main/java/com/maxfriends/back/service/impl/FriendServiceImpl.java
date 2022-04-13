@@ -50,7 +50,7 @@ public class FriendServiceImpl implements UserDetailsService, IFriendService {
 
     public FriendDto loadById(String id) {
         FriendDto friendDto;
-        logsInformations.affichageLogDate("Récupération des données du n°" + id);
+        logsInformations.affichageLogDate("Récupération des données de l'uid " + id);
         try {
             friendDto = this.friendConverter.entityToDto(this.friendRepository.getByUid(id), FriendDto.class);
         } catch (Exception e) {

@@ -29,7 +29,7 @@ public class FriendController {
         return this.friendService.loadById(id);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public Friend createUser(@RequestBody FriendDto friendDto){
         return this.friendService.createFriend(friendDto);
     }

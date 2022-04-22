@@ -36,3 +36,4 @@ build/
 ### Other files ###
 .properties
 .sql
+.gz

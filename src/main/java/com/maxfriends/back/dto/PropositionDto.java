@@ -1,5 +1,6 @@
 package com.maxfriends.back.dto;
 
+import com.maxfriends.back.entity.EtatProposition;
 import com.maxfriends.back.entity.TypeProposition;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,5 +19,10 @@ public class PropositionDto {
 
     LocalDateTime dateProposition;
 
+    String titreDemande;
+
     String demande;
+
+    EtatProposition etatProposition;
+
 }

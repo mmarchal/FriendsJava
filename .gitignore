@@ -32,3 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 .DS_Store
+
+### Other files ###
+.properties
+.sql
+.gz

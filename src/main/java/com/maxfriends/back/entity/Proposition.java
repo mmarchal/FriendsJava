@@ -31,7 +31,12 @@ public class Proposition  implements Serializable {
     LocalDateTime dateProposition;
 
     @Column
+    String titreDemande;
+
+    @Column
     String demande;
 
-
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "etatProposition_id", referencedColumnName = "id")
+    EtatProposition etatProposition;
 }
